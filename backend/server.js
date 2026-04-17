@@ -45,6 +45,10 @@ app.get('/api/test', async (req, res) => {
 });
 
 // rutas API deben ir aquí
+app.post('/api/businesses', async (req, res) => { /* create */ });
+app.get('/api/businesses/:id', async (req, res) => { /* read */ });
+app.put('/api/businesses/:id', async (req, res) => { /* update */ });
+app.delete('/api/businesses/:id', async (req, res) => { /* delete */ });
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
