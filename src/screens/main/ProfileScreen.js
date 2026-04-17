@@ -2,19 +2,13 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-
         {/* --- HEADER AZUL --- */}
+
         <View style={styles.header}>
-          <View style={styles.topActions}>
-            <TouchableOpacity style={styles.settingsButton}>
-              <Ionicons name="settings-outline" size={18} color="white" />
-              <Text style={styles.settingsText}>Ajustes</Text>
-            </TouchableOpacity>
-          </View>
 
           <View style={styles.profileInfo}>
             <View style={styles.avatar}>
@@ -48,7 +42,13 @@ export default function ProfileScreen() {
           <MenuItem icon="bar-chart-outline" label="Analytics" isComingSoon />
 
           <Text style={styles.sectionHeader}>OTROS</Text>
-          <MenuItem icon="settings-outline" label="Ajustes generales" />
+          <MenuItem><View style={styles.topActions}>
+            <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate('SettingsScreen')}>
+              <Ionicons name="settings-outline" size={18} color="white" />
+              <Text style={styles.settingsText}>Ajustes</Text>
+            </TouchableOpacity>
+          </View></MenuItem>
+
           <MenuItem icon="star-outline" label="Calificar la app" />
           <MenuItem icon="log-out-outline" label="Cerrar sesión" isLast color="#E74C3C" />
         </View>
