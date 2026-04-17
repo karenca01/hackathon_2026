@@ -1,16 +1,23 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, Text, StyleSheet } from 'react-native';
 
+// Importaciones de tus pantallas principales
 import HomeScreen from '../screens/main/HomeScreen';
 import IdeasScreen from '../screens/main/IdeasScreen';
 import AddScreen from '../screens/main/AddScreen';
 import CalendarScreen from '../screens/main/CalendarScreen';
 import ProfileScreen from '../screens/main/ProfileScreen';
 
-const Tab = createBottomTabNavigator();
+// Importaciones de las pantallas secundarias (Stack de Ideas)
+import DetalleIdeaScreen from '../screens/main/DetalleIdeaScreen';
+import CrearPostScreen from '../screens/main/CrearPostScreen'; // <-- NUEVO IMPORT
 
-// Simple icon placeholder — replace with react-native-vector-icons or expo icons
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+// Simple icon placeholder
 function TabIcon({ label, focused }) {
   const icons = {
     Inicio: '🏠',
@@ -25,6 +32,17 @@ function TabIcon({ label, focused }) {
         {icons[label]}
       </Text>
     </View>
+  );
+}
+
+// Stack específico para la pestaña de Ideas
+function IdeasStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="IdeasMain" component={IdeasScreen} />
+      <Stack.Screen name="DetalleIdeaScreen" component={DetalleIdeaScreen} />
+      <Stack.Screen name="CrearPostScreen" component={CrearPostScreen} />
+    </Stack.Navigator>
   );
 }
 
@@ -58,7 +76,7 @@ export default function MainNavigator() {
       })}
     >
       <Tab.Screen name="Inicio" component={HomeScreen} />
-      <Tab.Screen name="Ideas" component={IdeasScreen} />
+      <Tab.Screen name="Ideas" component={IdeasStackNavigator} />
       <Tab.Screen name="Agregar" component={AddScreen} />
       <Tab.Screen name="Calendario" component={CalendarScreen} />
       <Tab.Screen name="Perfil" component={ProfileScreen} />
