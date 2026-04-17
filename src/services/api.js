@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000/api';  // URL Vultr
+const API_BASE_URL = 'http://96.30.198.16:3000/api';  // URL Vultr
 
 const apiRequest = async (endpoint, options = {}) => {
   try {
