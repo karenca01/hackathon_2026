@@ -1,143 +1,439 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  StatusBar,
+  TouchableOpacity,
+  TextInput
+} from 'react-native';
 
 export default function HomeScreen() {
+  const [idea, setIdea] = useState('');
+
+  const getTagStyle = (tag) => {
+    switch (tag) {
+      case 'Tendencia':
+        return { backgroundColor: '#FFE4E6', color: '#E11D48' };
+      case 'Promoción':
+        return { backgroundColor: '#DCFCE7', color: '#16A34A' };
+      case 'Temporada':
+        return { backgroundColor: '#FEF3C7', color: '#D97706' };
+      default:
+        return { backgroundColor: '#E0E7FF', color: '#6C63FF' };
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <ScrollView contentContainerStyle={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>¡Hola! 👋</Text>
-            <Text style={styles.title}>Panel de Inicio</Text>
-          </View>
+      <StatusBar barStyle="dark-content" />
+
+      {/* HEADER */}
+      <View style={styles.header}>
+        <Text style={styles.title}>Cafetería el Rincon</Text>
+
+        <View style={styles.headerRight}>
+          <FontAwesome6 name="bell" size={20} color="black" />
           <TouchableOpacity style={styles.avatar}>
             <Text style={styles.avatarText}>U</Text>
           </TouchableOpacity>
         </View>
+      </View>
 
-        {/* Hero Card */}
+      <ScrollView contentContainerStyle={styles.content}>
+
+        {/* HERO CARD */}
         <View style={styles.heroCard}>
-          <Text style={styles.heroEmoji}>🚀</Text>
-          <Text style={styles.heroTitle}>Todo en un lugar</Text>
-          <Text style={styles.heroSubtitle}>
-            Gestiona tus ideas, calendario y perfil desde aquí
+          <Text style={styles.heroLabel}>✨ GENERACIÓN RÁPIDA</Text>
+
+          <Text style={styles.heroTitle}>
+            ¿Qué quieres lograr esta semana?
           </Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Ej: Quiero atraer más clientes el martes..."
+            placeholderTextColor="#D1CFFF"
+            value={idea}
+            onChangeText={setIdea}
+          />
+
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>⚡ Generar con IA</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Quick Actions */}
-        <Text style={styles.sectionTitle}>Accesos rápidos</Text>
-        <View style={styles.actionsGrid}>
-          {[
-            { emoji: '💡', label: 'Ideas' },
-            { emoji: '➕', label: 'Nuevo' },
-            { emoji: '📅', label: 'Calendario' },
-            { emoji: '👤', label: 'Perfil' },
-          ].map((item) => (
-            <TouchableOpacity key={item.label} style={styles.actionCard}>
-              <Text style={styles.actionEmoji}>{item.emoji}</Text>
-              <Text style={styles.actionLabel}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
+        {/* STATS */}
+        <Text style={styles.sectionTitle}>Esta semana</Text>
+
+        <View style={styles.statsContainer}>
+          <StatCard value="5" label="Posts publicados" change="+2 vs semana pasada" />
+          <StatCard value="4.2%" label="Engagement" change="+0.8 vs semana pasada" />
+          <StatCard value="128" label="Nuevos seguidores" change="+34 vs semana pasada" />
+        </View>
+
+        {/* LISTA */}
+        <View style={styles.listHeader}>
+          <Text style={styles.sectionTitleDark}>Próximas publicaciones</Text>
+          <Text style={styles.link}>Ver todo</Text>
+        </View>
+
+        <PostItem
+          emoji="☕"
+          title="Promoción 2x1 café"
+          subtitle="Hoy, 2:00 PM - Instagram"
+          status="Borrador"
+          statusStyle={styles.draft}
+        />
+
+        <PostItem
+          emoji="⭐"
+          title="Historia de estudiantes"
+          subtitle="Mñn., 9:00 AM - Instagram"
+          status="Listo"
+          statusStyle={styles.ready}
+        />
+
+        <PostItem
+          emoji="👍"
+          title="Jueves de 20% de desc."
+          subtitle="Juev., 1:00 PM - Instagram"
+          status="Listo"
+          statusStyle={styles.ready}
+        />
+
+        <Text style={styles.sectionTitle}>Sugerencias del día</Text>
+        <View style={styles.suggestionsContainer}>
+          <SuggestionCard
+            tag="Tendencia"
+            title="Reel con café aesthetic"
+            description="Graba el proceso..."
+            getTagStyle={getTagStyle}
+          />
+          <SuggestionCard
+            tag="Promoción"
+            title="2x1 en bebidas frías"
+            description="Publica una promo limitada por calor para aumentar visitas en horas pico."
+            getTagStyle={getTagStyle}
+          />
         </View>
       </ScrollView>
     </View>
   );
 }
 
+/* COMPONENTES */
+
+const StatCard = ({ value, label, change }) => (
+  <View style={styles.statCard}>
+    <Text style={styles.statValue}>{value}</Text>
+    <Text style={styles.statLabel}>{label}</Text>
+    <Text style={styles.statChange}>{change}</Text>
+  </View>
+);
+
+const PostItem = ({ emoji, title, subtitle, status, statusStyle }) => (
+  <View style={styles.postItem}>
+    <View style={styles.postLeft}>
+      <Text style={styles.postEmoji}>{emoji}</Text>
+      <View>
+        <Text style={styles.postTitle}>{title}</Text>
+        <Text style={styles.postSubtitle}>{subtitle}</Text>
+      </View>
+    </View>
+
+    <View style={[styles.statusBadge, statusStyle]}>
+      <Text style={styles.statusText}>{status}</Text>
+    </View>
+  </View>
+);
+
+const SuggestionCard = ({ tag, title, description, getTagStyle }) => {
+  const colors = getTagStyle(tag);
+
+  return (
+    <View style={styles.suggestionCard}>
+
+      {/* TAG */}
+      <View style={[styles.tag, { backgroundColor: colors.backgroundColor }]}>
+        <Text style={[styles.tagText, { color: colors.color }]}>
+          {tag}
+        </Text>
+      </View>
+
+      {/* CONTENIDO */}
+      <Text style={styles.suggestionTitle} numberOfLines={2}>
+        {title}
+      </Text>
+
+      <Text
+        style={styles.suggestionDescription}
+        numberOfLines={3}
+        ellipsizeMode="tail"
+      >
+        {description}
+      </Text>
+
+      {/* BOTÓN */}
+      <TouchableOpacity style={styles.useButton}>
+        {/* que envie a detalleIdeaScreen */}
+        <Text style={styles.useButtonText}>Ver idea</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+/* ESTILOS */
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F0F1A',
+    backgroundColor: '#F5F4FF',
   },
   content: {
-    paddingHorizontal: 24,
-    paddingTop: 60,
-    paddingBottom: 30,
+    padding: 20,
   },
+
   header: {
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    backgroundColor: '#F5F4FF',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 28,
   },
-  greeting: {
-    color: '#9E9E9E',
-    fontSize: 14,
-    marginBottom: 4,
-  },
-  title: {
-    color: '#FFFFFF',
-    fontSize: 26,
-    fontWeight: '700',
-  },
-  avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#6C63FF',
+
+  headerRight: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    gap: 10,
   },
-  avatarText: {
-    color: '#FFFFFF',
+
+  icon: {
     fontSize: 18,
-    fontWeight: '700',
   },
-  heroCard: {
-    backgroundColor: '#1E1E2E',
-    borderRadius: 20,
-    padding: 28,
-    alignItems: 'center',
-    marginBottom: 32,
-    borderWidth: 1,
-    borderColor: '#2A2A3E',
-  },
-  heroEmoji: {
-    fontSize: 48,
-    marginBottom: 12,
-  },
-  heroTitle: {
-    color: '#FFFFFF',
+
+  title: {
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 8,
   },
-  heroSubtitle: {
-    color: '#9E9E9E',
-    fontSize: 14,
-    textAlign: 'center',
-    lineHeight: 20,
+
+  avatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#6C63FF',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  sectionTitle: {
-    color: '#FFFFFF',
+
+  avatarText: {
+    color: '#fff',
+    fontWeight: '700',
+  },
+
+  /* HERO */
+  heroCard: {
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+    backgroundColor: '#6C63FF',
+  },
+
+  heroLabel: {
+    color: '#EDEBFF',
+    fontSize: 12,
+    marginBottom: 6,
+  },
+
+  heroTitle: {
+    color: '#fff',
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 16,
+    marginBottom: 12,
   },
-  actionsGrid: {
+
+  input: {
+    backgroundColor: '#7D74FF',
+    borderRadius: 12,
+    padding: 12,
+    color: '#fff',
+    marginBottom: 12,
+  },
+
+  button: {
+    backgroundColor: '#fff',
+    padding: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+
+  buttonText: {
+    color: '#6C63FF',
+    fontWeight: '700',
+  },
+
+  /* STATS */
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 10,
+  },
+
+  statsContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
-  actionCard: {
-    backgroundColor: '#1E1E2E',
-    borderRadius: 16,
-    padding: 20,
+
+  statCard: {
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    padding: 10,
+    width: '31%',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '47%',
-    borderWidth: 1,
-    borderColor: '#2A2A3E',
   },
-  actionEmoji: {
-    fontSize: 30,
-    marginBottom: 8,
+
+  statValue: {
+    fontSize: 18,
+    fontWeight: '700',
   },
-  actionLabel: {
-    color: '#CCCCCC',
-    fontSize: 14,
+
+  statLabel: {
+    fontSize: 12,
+    color: '#777',
+    textAlign: 'center',
+  },
+
+  statChange: {
+    fontSize: 11,
+    color: 'green',
+    textAlign: 'center',
+  },
+
+  /* LIST */
+  listHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+
+  sectionTitleDark: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+
+  link: {
+    color: '#6C63FF',
+  },
+
+  postItem: {
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 14,
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  postLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+
+  postEmoji: {
+    fontSize: 24,
+  },
+
+  postTitle: {
     fontWeight: '600',
+  },
+
+  postSubtitle: {
+    fontSize: 12,
+    color: '#777',
+  },
+
+  statusBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+  },
+
+  statusText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+
+  // SUGERENCIAS
+  suggestionsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+
+  suggestionCard: {
+    backgroundColor: '#fff',
+    maxWidthidth: 230,
+    maxHeight: 250,
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 14,
+    width: '48%',
+    height: 200,
+    justifyContent: 'space-between',
+  },
+
+  tag: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#E0E7FF',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+    marginBottom: 10,
+  },
+
+  tagText: {
+    color: '#6C63FF',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+
+  suggestionTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+
+  suggestionDescription: {
+    fontSize: 12,
+    color: '#666',
+    lineHeight: 16,
+  },
+
+  useButton: {
+    backgroundColor: '#6C63FF',
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+
+  useButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+
+  draft: {
+    backgroundColor: '#FFE7C2',
+  },
+
+  ready: {
+    backgroundColor: '#D4F5E9',
   },
 });
