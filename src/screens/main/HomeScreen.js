@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { useNavigation } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -12,6 +13,7 @@ import {
 
 export default function HomeScreen() {
   const [idea, setIdea] = useState('');
+  const navigation = useNavigation(); // <-- 1. Agregamos la navegación al HomeScreen
 
   const getTagStyle = (tag) => {
     switch (tag) {
@@ -35,8 +37,16 @@ export default function HomeScreen() {
         <Text style={styles.title}>Cafetería el Rincon</Text>
 
         <View style={styles.headerRight}>
-          <FontAwesome6 name="bell" size={20} color="black" />
-          <TouchableOpacity style={styles.avatar}>
+
+          {/* 2. Envolvemos la campana en un TouchableOpacity con su onPress */}
+          <TouchableOpacity onPress={() => navigation.navigate('NotificationScreen')}>
+            <FontAwesome6 name="bell" size={20} color="black" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.avatar}
+            onPress={() => navigation.navigate('ProfileScreen')}
+          >
             <Text style={styles.avatarText}>U</Text>
           </TouchableOpacity>
         </View>
@@ -152,6 +162,7 @@ const PostItem = ({ emoji, title, subtitle, status, statusStyle }) => (
 
 const SuggestionCard = ({ tag, title, description, getTagStyle }) => {
   const colors = getTagStyle(tag);
+  const navigation = useNavigation();
 
   return (
     <View style={styles.suggestionCard}>
@@ -177,8 +188,10 @@ const SuggestionCard = ({ tag, title, description, getTagStyle }) => {
       </Text>
 
       {/* BOTÓN */}
-      <TouchableOpacity style={styles.useButton}>
-        {/* que envie a detalleIdeaScreen */}
+      <TouchableOpacity
+        style={styles.useButton}
+        onPress={() => navigation.navigate('DetalleIdeaScreen')}
+      >
         <Text style={styles.useButtonText}>Ver idea</Text>
       </TouchableOpacity>
     </View>
@@ -209,7 +222,7 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 15, // <-- Aumenté un poco el gap de 10 a 15 para que la campana y el avatar no estén tan pegados
   },
 
   icon: {
@@ -380,7 +393,7 @@ const styles = StyleSheet.create({
 
   suggestionCard: {
     backgroundColor: '#fff',
-    maxWidthidth: 230,
+    maxWidth: 230,
     maxHeight: 250,
     borderRadius: 18,
     padding: 16,
