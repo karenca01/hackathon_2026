@@ -1,188 +1,202 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  StatusBar,
-  TouchableOpacity,
-} from 'react-native';
-
-const MENU_ITEMS = [
-  { emoji: '🔔', label: 'Notificaciones' },
-  { emoji: '🔒', label: 'Privacidad' },
-  { emoji: '🎨', label: 'Apariencia' },
-  { emoji: '❓', label: 'Ayuda' },
-  { emoji: '🚪', label: 'Cerrar sesión' },
-];
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ProfileScreen({ navigation }) {
-  const handleLogout = () => {
-    navigation.reset({ index: 0, routes: [{ name: 'Auth' }] });
-  };
-
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <ScrollView contentContainerStyle={styles.content}>
-        {/* Avatar & Name */}
-        <View style={styles.profileSection}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>U</Text>
-          </View>
-          <Text style={styles.name}>Usuario</Text>
-          <Text style={styles.email}>usuario@correo.com</Text>
-          <TouchableOpacity style={styles.editBtn}>
-            <Text style={styles.editBtnText}>Editar perfil</Text>
-          </TouchableOpacity>
-        </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* --- HEADER AZUL --- */}
 
-        {/* Stats */}
-        <View style={styles.statsRow}>
-          {[
-            { value: '12', label: 'Ideas' },
-            { value: '5', label: 'Eventos' },
-            { value: '3', label: 'Tareas' },
-          ].map((s) => (
-            <View key={s.label} style={styles.statCard}>
-              <Text style={styles.statValue}>{s.value}</Text>
-              <Text style={styles.statLabel}>{s.label}</Text>
+        <View style={styles.header}>
+
+          <View style={styles.profileInfo}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>Aqui va el logo de la empresa</Text>
             </View>
-          ))}
+            <View style={styles.profileTextContainer}>
+              <Text style={styles.businessName}>nombre desde la base de datos</Text>
+              <Text style={styles.location}>ubicacion desde la base de datos</Text>
+              <View style={styles.planBadge}>
+                <Text style={styles.planText}>Plan (nombre del plan)</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Estadísticas: todas salen de la base de datos*/}
+          <View style={styles.statsRow}>
+            <StatItem value="#" label="Posts creados" />
+            <StatItem value="#" label="Estrategias" />
+            <StatItem value="#" label="Engagement promedio" />
+          </View>
         </View>
 
-        {/* Menu */}
-        <View style={styles.menuCard}>
-          {MENU_ITEMS.map((item, idx) => (
-            <TouchableOpacity
-              key={item.label}
-              style={[styles.menuItem, idx < MENU_ITEMS.length - 1 && styles.menuItemBorder]}
-              onPress={item.label === 'Cerrar sesión' ? handleLogout : undefined}
-            >
-              <Text style={styles.menuEmoji}>{item.emoji}</Text>
-              <Text style={[styles.menuLabel, item.label === 'Cerrar sesión' && styles.logoutText]}>
-                {item.label}
-              </Text>
-              <Text style={styles.menuArrow}>›</Text>
+        {/* --- SECCIONES DE MENÚ --- */}
+        <View style={styles.menuContainer}>
+          <MenuItem icon="business-outline" label="Mi negocio" />
+          <MenuItem icon="person-outline" label="Cuenta" />
+          <MenuItem icon="notifications-outline" label="Notificaciones" />
+
+          <Text style={styles.sectionHeader}>HERRAMIENTAS IA</Text>
+          <MenuItem icon="chatbubble-ellipses-outline" label="Evaluador de contenido" />
+          <MenuItem icon="bar-chart-outline" label="Analytics" isComingSoon />
+
+          <Text style={styles.sectionHeader}>OTROS</Text>
+          <MenuItem><View style={styles.topActions}>
+            <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate('SettingsScreen')}>
+              <Ionicons name="settings-outline" size={18} color="white" />
+              <Text style={styles.settingsText}>Ajustes</Text>
             </TouchableOpacity>
-          ))}
+          </View></MenuItem>
+
+          <MenuItem icon="star-outline" label="Calificar la app" />
+          <MenuItem icon="log-out-outline" label="Cerrar sesión" isLast color="#E74C3C" />
         </View>
       </ScrollView>
     </View>
   );
 }
 
+// Sub-componentes para limpieza de código
+const StatItem = ({ value, label }) => (
+  <View style={styles.statBox}>
+    <Text style={styles.statValue}>{value}</Text>
+    <Text style={styles.statLabel}>{label}</Text>
+  </View>
+);
+
+const MenuItem = ({ icon, label, isComingSoon, isLast, color = "#1A1A1A" }) => (
+  <TouchableOpacity style={[styles.menuItem, isLast && { borderBottomWidth: 0 }]}>
+    <View style={styles.menuItemLeft}>
+      <Ionicons name={icon} size={22} color={color === "#1A1A1A" ? "#6C5CE7" : color} />
+      <Text style={[styles.menuItemLabel, { color }]}>{label}</Text>
+    </View>
+    <View style={styles.menuItemRight}>
+      {isComingSoon && (
+        <View style={styles.soonBadge}>
+          <Text style={styles.soonText}>Pronto</Text>
+        </View>
+      )}
+      <Ionicons name="chevron-forward" size={18} color="#CCC" />
+    </View>
+  </TouchableOpacity>
+);
+
+const TabItem = ({ icon, label, active }) => (
+  <TouchableOpacity style={styles.tabItem}>
+    <Ionicons name={icon} size={24} color={active ? "#6C5CE7" : "#8E8E93"} />
+    <Text style={[styles.tabLabel, active && { color: "#6C5CE7" }]}>{label}</Text>
+  </TouchableOpacity>
+);
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0F0F1A',
-  },
-  content: {
-    paddingHorizontal: 24,
-    paddingTop: 60,
-    paddingBottom: 40,
-  },
-  profileSection: {
-    alignItems: 'center',
-    marginBottom: 28,
-  },
-  avatar: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    backgroundColor: '#6C63FF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 14,
-    shadowColor: '#6C63FF',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
-    elevation: 10,
-  },
-  avatarText: {
-    color: '#FFFFFF',
-    fontSize: 36,
-    fontWeight: '700',
-  },
-  name: {
-    color: '#FFFFFF',
-    fontSize: 22,
-    fontWeight: '700',
-    marginBottom: 4,
-  },
-  email: {
-    color: '#9E9E9E',
-    fontSize: 14,
-    marginBottom: 16,
-  },
-  editBtn: {
-    borderWidth: 1,
-    borderColor: '#6C63FF',
-    borderRadius: 10,
+  container: { flex: 1, backgroundColor: '#F8F9FE' },
+  header: {
+    backgroundColor: '#5E5CE6',
+    paddingTop: 20,
     paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingBottom: 30,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
-  editBtnText: {
-    color: '#6C63FF',
-    fontSize: 14,
-    fontWeight: '600',
+  topActions: { alignItems: 'flex-end' },
+  settingsButton: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 15,
+    alignItems: 'center',
   },
+  settingsText: { color: 'white', marginLeft: 5, fontWeight: '600' },
+  profileInfo: { flexDirection: 'row', marginTop: 10, alignItems: 'center' },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 25,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.5)',
+  },
+  avatarText: { color: 'white', fontSize: 28, fontWeight: 'bold' },
+  profileTextContainer: { marginLeft: 15 },
+  businessName: { color: 'white', fontSize: 20, fontWeight: 'bold' },
+  location: { color: 'rgba(255,255,255,0.8)', fontSize: 14, marginVertical: 4 },
+  planBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  planText: { color: 'white', fontSize: 12, fontWeight: '700' },
   statsRow: {
     flexDirection: 'row',
-    gap: 12,
-    marginBottom: 24,
+    justifyContent: 'space-between',
+    marginTop: 30,
+    paddingHorizontal: 10,
   },
-  statCard: {
-    flex: 1,
-    backgroundColor: '#1E1E2E',
-    borderRadius: 14,
-    padding: 16,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#2A2A3E',
-  },
-  statValue: {
-    color: '#6C63FF',
-    fontSize: 22,
+  statBox: { alignItems: 'center' },
+  statValue: { color: 'white', fontSize: 22, fontWeight: 'bold' },
+  statLabel: { color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 4 },
+
+  menuContainer: { padding: 20 },
+  sectionHeader: {
+    fontSize: 14,
     fontWeight: '700',
-    marginBottom: 4,
-  },
-  statLabel: {
-    color: '#9E9E9E',
-    fontSize: 12,
-  },
-  menuCard: {
-    backgroundColor: '#1E1E2E',
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#2A2A3E',
-    overflow: 'hidden',
+    color: '#4A4A4A',
+    marginTop: 25,
+    marginBottom: 10
   },
   menuItem: {
     flexDirection: 'row',
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 15,
+    marginBottom: 1,
     alignItems: 'center',
-    padding: 18,
-    gap: 14,
+    justifyContent: 'space-between',
   },
-  menuItemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#2A2A3E',
+  menuItemLeft: { flexDirection: 'row', alignItems: 'center' },
+  menuItemLabel: { marginLeft: 15, fontSize: 16, fontWeight: '500' },
+  menuItemRight: { flexDirection: 'row', alignItems: 'center' },
+  soonBadge: {
+    backgroundColor: '#EEEAFF',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 10,
+    marginRight: 10,
   },
-  menuEmoji: {
-    fontSize: 20,
+  soonText: { color: '#6C5CE7', fontSize: 12, fontWeight: 'bold' },
+
+  tabBar: {
+    flexDirection: 'row',
+    height: 80,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#EEE',
+    paddingBottom: 20,
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
-  menuLabel: {
-    flex: 1,
-    color: '#CCCCCC',
-    fontSize: 15,
-    fontWeight: '500',
+  tabItem: { alignItems: 'center', justifyContent: 'center' },
+  tabLabel: { fontSize: 12, color: '#8E8E93', marginTop: 4 },
+  fabContainer: {
+    top: -20,
+    shadowColor: '#6C5CE7',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  logoutText: {
-    color: '#FF6584',
-  },
-  menuArrow: {
-    color: '#9E9E9E',
-    fontSize: 20,
+  fab: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#6C5CE7',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
