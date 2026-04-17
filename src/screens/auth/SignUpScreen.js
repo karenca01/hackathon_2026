@@ -10,7 +10,7 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
-import createUser from "../../services/api.js"
+import { createUser } from '../../services/api';
 
 export default function SignUpScreen({ navigation }) {
   const [name, setName] = useState('');
@@ -18,12 +18,19 @@ export default function SignUpScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
 
-  const handleSignUp = () => {
-    // TODO: Implement real auth logic
-    if (password === confirm) {
-      createUser({name, email, password});
+  const handleSignUp = async () => {
+    if (password !== confirm) {
+      alert('Las contraseñas no coinciden');
+      return;
     }
-    navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
+
+    try {
+      await createUser({ nombre: name, correo: email, cont: password });
+      navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
+    } catch (error) {
+      alert('Error creando usuario');
+      console.error(error);
+    }
   };
 
   return (
