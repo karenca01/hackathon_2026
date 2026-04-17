@@ -22,6 +22,10 @@ export const createBusiness = (data) => apiRequest('/businesses', {  // Create
   method: 'POST',
   body: JSON.stringify(data),
 });
+export const createUser = (data) => apiRequest('/user', {  // Create
+  method: 'POST',
+  body: JSON.stringify(data),
+});
 export const getBusiness = (id) => apiRequest(`/businesses/${id}`);  // Read
 export const updateBusiness = (id, data) => apiRequest(`/businesses/${id}`, {  // Update
   method: 'PUT',

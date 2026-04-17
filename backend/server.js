@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -45,10 +45,84 @@ app.get('/api/test', async (req, res) => {
 });
 
 // rutas API deben ir aquí
-app.post('/api/businesses', async (req, res) => { /* create */ });
-app.get('/api/businesses/:id', async (req, res) => { /* read */ });
-app.put('/api/businesses/:id', async (req, res) => { /* update */ });
-app.delete('/api/businesses/:id', async (req, res) => { /* delete */ });
+app.post('/api/businesses', async (req, res) => {
+  try {
+    const db = await connectDB();
+    const { nombre, desc, usuario } = req.body;
+
+    const result = await db.collection('negocio').insertOne({
+      nombre,
+      desc,
+      usuario,
+    });
+
+    res.status(201).json({ message: 'Negocio creado', insertedId: result.insertedId });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/user', async (req, res) => {
+  try {
+    const db = await connectDB();
+    const { nombre, correo, cont } = req.body;
+
+    const result = await db.collection('usuarios').insertOne({
+      nombre,
+      correo,
+      cont,
+    });
+
+    res.status(201).json({ message: 'Usuario creado', insertedId: result.insertedId });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/businesses/:id', async (req, res) => {
+  try {
+    const db = await connectDB();
+    const { id } = req.params;
+    const business = await db.collection('negocio').findOne({ _id: new ObjectId(id) });
+
+    if (!business) return res.status(404).json({ error: 'Negocio no encontrado' });
+    res.json(business);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/businesses/:id', async (req, res) => {
+  try {
+    const db = await connectDB();
+    const { id } = req.params;
+    const update = req.body;
+
+    const result = await db.collection('negocio').updateOne(
+      { _id: new ObjectId(id) },
+      { $set: update }
+    );
+
+    if (result.matchedCount === 0) return res.status(404).json({ error: 'Negocio no encontrado' });
+    res.json({ message: 'Negocio actualizado' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/api/businesses/:id', async (req, res) => {
+  try {
+    const db = await connectDB();
+    const { id } = req.params;
+
+    const result = await db.collection('negocio').deleteOne({ _id: new ObjectId(id) });
+    if (result.deletedCount === 0) return res.status(404).json({ error: 'Negocio no encontrado' });
+
+    res.json({ message: 'Negocio eliminado' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
