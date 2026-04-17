@@ -10,6 +10,7 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
+import createUser from "../../services/api.js"
 
 export default function SignUpScreen({ navigation }) {
   const [name, setName] = useState('');
@@ -19,6 +20,9 @@ export default function SignUpScreen({ navigation }) {
 
   const handleSignUp = () => {
     // TODO: Implement real auth logic
+    if (password === confirm) {
+      createUser({name, email, password});
+    }
     navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
   };
 
