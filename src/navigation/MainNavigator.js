@@ -11,8 +11,8 @@ import CalendarScreen from '../screens/main/CalendarScreen';
 import ProfileScreen from '../screens/main/ProfileScreen';
 
 // Importaciones de las pantallas secundarias (Stack de Ideas)
-//import DetalleIdeaScreen from '../screens/main/DetalleIdeaScreen';
-//import CrearPostScreen from '../screens/main/CrearPostScreen'; // <-- NUEVO IMPORT\
+import DetalleIdeaScreen from '../screens/main/DetalleIdeaScreen';
+import CrearPostScreen from '../screens/main/CrearPostScreen'; // <-- NUEVO IMPORT\
 import SettingsScreen from '../screens/main/SettingsScreen';
 
 
