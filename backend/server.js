@@ -57,7 +57,6 @@ app.post('/api/businesses', async (req, res) => {
       impacto,
       redes,
       vision,
-      mision,
       metas,
       usuario } = req.body;
 
@@ -71,10 +70,11 @@ app.post('/api/businesses', async (req, res) => {
       impacto,
       redes,
       vision,
-      mision,
       metas,
       usuario
     });
+
+    console.log(result);
 
     res.status(201).json({ message: 'Negocio creado', insertedId: result.insertedId });
   } catch (error) {

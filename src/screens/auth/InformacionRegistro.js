@@ -23,13 +23,21 @@ export default function InformacionRegistro({ navigation }) {
     const [impacto, setImpacto] = useState('');
     const [redes, setRedes] = useState('');
     const [vision, setVision] = useState('');
-    const [mision, setMision] = useState('');
     const [metas, setMetas] = useState('');
+    const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      const data = await sessionStore.getUserData();
+      setUserData(data);
+    };
+    loadUserData();
+  }, []);
 
     const handleSignUp = async () => {
         // Validación de campos vacíos
         if (!name || !negocio || !productos || !ubicacion || !descripcion ||
-            !valores || !impacto || !redes || !vision || !mision || !metas) {
+            !valores || !impacto || !redes || !vision || !metas) {
             Alert.alert('Atención', 'Por favor, completa todos los campos');
             return;
         }
@@ -45,8 +53,8 @@ export default function InformacionRegistro({ navigation }) {
                 impacto,
                 redes,
                 vision,
-                mision,
-                metas
+                metas,
+                usuario: userData._id
             });
 
             navigation.reset({
@@ -90,14 +98,13 @@ export default function InformacionRegistro({ navigation }) {
                 <View style={styles.form}>
                     <CustomInput label="Nombre del Responsable" value={name} onChangeText={setName} placeholder="Ej. Juan Pérez" />
                     <CustomInput label="Nombre del Negocio" value={negocio} onChangeText={setNegocio} placeholder="Nombre comercial" />
-                    <CustomInput label="Productos/Servicios" value={productos} onChangeText={setProductos} placeholder="¿Qué vendes o cual; es tu producto?" multiline={true} />
+                    <CustomInput label="Productos/Servicios" value={productos} onChangeText={setProductos} placeholder="¿Qué vendes o cuál es tu producto?" multiline={true} />
                     <CustomInput label="Ubicación" value={ubicacion} onChangeText={setUbicacion} placeholder="Dirección física o ciudad" />
-                    <CustomInput label="Descripción" value={descripcion} onChangeText={setDescripcion} placeholder="Descripcion de tu negocio negocio" multiline={true} />
+                    <CustomInput label="Descripción" value={descripcion} onChangeText={setDescripcion} placeholder="Descripcion de tu negocio" multiline={true} />
                     <CustomInput label="Valores" value={valores} onChangeText={setValores} placeholder="Ej. Honestidad, Innovación" />
                     <CustomInput label="Impacto Social" value={impacto} onChangeText={setImpacto} placeholder="¿Cómo ayudas a la comunidad?" multiline={true} />
-                    <CustomInput label="Redes Sociales" value={redes} onChangeText={setRedes} placeholder="@tuusuario / links" />
-                    <CustomInput label="Visión" value={vision} onChangeText={setVision} placeholder="¿Cual es la vison de tu negocio" multiline={true} />
-                    <CustomInput label="Misión" value={mision} onChangeText={setMision} placeholder="¿Cuál es el proposito de tu negocio?" multiline={true} />
+                    <CustomInput label="Redes Sociales" value={redes} onChangeText={setRedes} placeholder="¿En cuáles redes sociales te encuentras?" />
+                    <CustomInput label="Visión" value={vision} onChangeText={setVision} placeholder="¿Cual es la visón de tu negocio" multiline={true} />
                     <CustomInput label="Metas" value={metas} onChangeText={setMetas} placeholder="¿Cuales son las metas de tu negocio?" multiline={true} />
 
                     <TouchableOpacity style={styles.signUpBtn} onPress={handleSignUp}>
