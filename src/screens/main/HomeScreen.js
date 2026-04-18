@@ -15,7 +15,6 @@ import sessionStore from '../../services/sesion';
 export default function HomeScreen() {
   const [idea, setIdea] = useState('');
   const navigation = useNavigation(); // <-- 1. Agregamos la navegación al HomeScreen
-  const correo = sessionStore.getToken();
 
   const getTagStyle = (tag) => {
     switch (tag) {

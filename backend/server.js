@@ -86,8 +86,6 @@ app.post('/api/user/find', async (req, res) => {
     const db = await connectDB();
     const { correo, cont } = req.body;
 
-    console.log("correo");
-
     const result = await db.collection('usuarios').findOne({
       correo: correo,
       cont: cont,
