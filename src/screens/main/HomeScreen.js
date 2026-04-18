@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   TextInput
 } from 'react-native';
+import sessionStore from '../../services/sesion';
 
 export default function HomeScreen() {
   const [idea, setIdea] = useState('');
@@ -30,6 +31,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      
       <StatusBar barStyle="dark-content" />
 
       {/* HEADER */}

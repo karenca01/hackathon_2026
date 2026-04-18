@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import sessionStore from '../../services/sesion';
 
 export default function ProfileScreen({ navigation }) {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      const data = await sessionStore.getUserData();
+      setUserData(data);
+    };
+    loadUserData();
+  }, []);
+
+  const handleLogOut = async () => {
+    await sessionStore.clearSession();
+    const rootNavigation = navigation.getParent()?.getParent();
+    if (rootNavigation) {
+      rootNavigation.reset({ index: 0, routes: [{ name: 'Auth' }] });
+    } else {
+      navigation.reset({ index: 0, routes: [{ name: 'Auth' }] });
+    }
+  };
+
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -15,7 +37,7 @@ export default function ProfileScreen({ navigation }) {
               <Text style={styles.avatarText}>Aqui va el logo de la empresa</Text>
             </View>
             <View style={styles.profileTextContainer}>
-              <Text style={styles.businessName}>nombre desde la base de datos</Text>
+              <Text style={styles.businessName}>{userData?.nombre || 'Usuario'}</Text>
               <Text style={styles.location}>ubicacion desde la base de datos</Text>
               <View style={styles.planBadge}>
                 <Text style={styles.planText}>Plan (nombre del plan)</Text>
@@ -50,7 +72,7 @@ export default function ProfileScreen({ navigation }) {
           </View></MenuItem>
 
           <MenuItem icon="star-outline" label="Calificar la app" />
-          <MenuItem icon="log-out-outline" label="Cerrar sesión" isLast color="#E74C3C" />
+          <MenuItem icon="log-out-outline" label="Cerrar sesión" isLast color="#E74C3C" onPress={handleLogOut}/>
         </View>
       </ScrollView>
     </View>
@@ -65,8 +87,8 @@ const StatItem = ({ value, label }) => (
   </View>
 );
 
-const MenuItem = ({ icon, label, isComingSoon, isLast, color = "#1A1A1A" }) => (
-  <TouchableOpacity style={[styles.menuItem, isLast && { borderBottomWidth: 0 }]}>
+const MenuItem = ({ icon, label, isComingSoon, isLast, color = "#1A1A1A", onPress }) => (
+  <TouchableOpacity style={[styles.menuItem, isLast && { borderBottomWidth: 0 }]} onPress={onPress}>
     <View style={styles.menuItemLeft}>
       <Ionicons name={icon} size={22} color={color === "#1A1A1A" ? "#6C5CE7" : color} />
       <Text style={[styles.menuItemLabel, { color }]}>{label}</Text>
