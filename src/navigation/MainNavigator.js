@@ -13,10 +13,12 @@ import ProfileScreen from '../screens/main/ProfileScreen';
 // Importaciones de las pantallas secundarias
 import DetalleIdeaScreen from '../screens/main/DetalleIdeaScreen';
 import CrearPostScreen from '../screens/main/CrearPostScreen';
-import NotificationScreen from '../screens/main/NotificationScreen'; 
 import SettingsScreen from '../screens/main/SettingsScreen';
 import InformacionRegistro from '../screens/main/InformacionRegistro';
 
+import VistaPreviaScreen from '../screens/main/VistaPreviaScreen';
+// Nota: Se eliminó la importación duplicada de NotificationScreen
+import NotificationScreen from '../screens/main/NotificationScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -26,6 +28,7 @@ function TabIcon({ label, focused }) {
   const icons = {
     Inicio: '🏠',
     Ideas: '💡',
+    Notificaciones: '🔔', // ¡Faltaba este ícono para evitar errores visuales!
     Agregar: '➕',
     Calendario: '📅',
     Perfil: '👤',
@@ -45,11 +48,11 @@ function HomeStackNavigator() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="HomeMain" component={HomeScreen} />
       <Stack.Screen name="DetalleIdeaScreen" component={DetalleIdeaScreen} />
-
-      {/* 2. AGREGAR NOTIFICACIONES AL STACK DE INICIO */}
+      <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
       <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="InformacionRegistro" component={InformacionRegistro} />
+      <Stack.Screen name="VistaPreviaScreen" component={VistaPreviaScreen} />
     </Stack.Navigator>
   );
 }
@@ -63,6 +66,16 @@ function IdeasStackNavigator() {
       <Stack.Screen name="CrearPostScreen" component={CrearPostScreen} />
       <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
       <Stack.Screen name="InformacionRegistro" component={InformacionRegistro} />
+      <Stack.Screen name="VistaPreviaScreen" component={VistaPreviaScreen} />
+    </Stack.Navigator>
+  );
+}
+
+// Stack específico para la pestaña de Notificaciones
+function NotificationStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
     </Stack.Navigator>
   );
 }
@@ -98,10 +111,10 @@ export default function MainNavigator() {
     >
       <Tab.Screen name="Inicio" component={HomeStackNavigator} />
       <Tab.Screen name="Ideas" component={IdeasStackNavigator} />
+      <Tab.Screen name="Notificaciones" component={NotificationStackNavigator} />
       <Tab.Screen name="Agregar" component={AddScreen} />
       <Tab.Screen name="Calendario" component={CalendarScreen} />
       <Tab.Screen name="Perfil" component={ProfileScreen} />
-      {/* Como esta pestaña se llama "Perfil", usaremos ese nombre en el HomeScreen */}
     </Tab.Navigator>
   );
 }

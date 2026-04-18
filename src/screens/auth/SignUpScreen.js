@@ -10,6 +10,7 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
+import sessionStore from '../../services/sesion';
 import { createUser } from '../../services/api';
 
 export default function SignUpScreen({ navigation }) {
@@ -25,8 +26,8 @@ export default function SignUpScreen({ navigation }) {
     }
 
     try {
-      await createUser({ nombre: name, correo: email, cont: password });
-      // Primero completar la información de la empresa, luego ir al Main
+      const userData = await createUser({ nombre: name, correo: email, cont: password });
+      await sessionStore.setUserData({ _id: userData._id, nombre: name, correo: email });
       navigation.reset({
         index: 0,
         routes: [{ name: 'Main', params: { screen: 'Inicio', params: { screen: 'InformacionRegistro' } } }],

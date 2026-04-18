@@ -38,7 +38,7 @@ app.get('/api/test', async (req, res) => {
   try {
     const db = await connectDB();
     await db.admin().command({ ping: 1 });
-    res.json({ message: "Conexión exitosa a MongoDB!" });
+    res.json({ message: "Conexión exitosa a MongoDB" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -93,7 +93,28 @@ app.post('/api/user', async (req, res) => {
       cont,
     });
 
-    res.status(201).json({ message: 'Usuario creado', insertedId: result.insertedId });
+    console.log(result);
+
+    res.status(201).json({ message: 'Usuario creado', _id: result.insertedId, nombre: nombre, correo: correo });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/user/find', async (req, res) => {
+  try {
+    const db = await connectDB();
+    const { correo, cont } = req.body;
+
+    const result = await db.collection('usuarios').findOne({
+      correo: correo,
+      cont: cont,
+    });
+
+    console.log(result);
+
+    if (!result) return res.status(404).json({ error: 'Usuario no encontrado' });
+    res.json({ _id: result._id, nombre: result.nombre, correo: result.correo });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   TextInput
 } from 'react-native';
+import sessionStore from '../../services/sesion';
 
 export default function HomeScreen() {
   const [idea, setIdea] = useState('');
@@ -30,6 +31,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      
       <StatusBar barStyle="dark-content" />
 
       {/* HEADER */}
@@ -87,32 +89,41 @@ export default function HomeScreen() {
         {/* LISTA */}
         <View style={styles.listHeader}>
           <Text style={styles.sectionTitleDark}>Próximas publicaciones</Text>
-          <Text style={styles.link}>Ver todo</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('CalendarScreen')}>
+            <Text style={styles.link}>Ver todo</Text>
+          </TouchableOpacity>
+          
         </View>
 
-        <PostItem
-          emoji="☕"
-          title="Promoción 2x1 café"
-          subtitle="Hoy, 2:00 PM - Instagram"
-          status="Borrador"
-          statusStyle={styles.draft}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('VistaPreviaScreen')}>
+          <PostItem
+            emoji="☕"
+            title="Promoción 2x1 café"
+            subtitle="Hoy, 2:00 PM - Instagram"
+            status="Borrador"
+            statusStyle={styles.draft}
+          />
+        </TouchableOpacity>
 
-        <PostItem
-          emoji="⭐"
-          title="Historia de estudiantes"
-          subtitle="Mñn., 9:00 AM - Instagram"
-          status="Listo"
-          statusStyle={styles.ready}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('VistaPreviaScreen')}>
+          <PostItem
+            emoji="⭐"
+            title="Historia de estudiantes"
+            subtitle="Mñn., 9:00 AM - Instagram"
+            status="Listo"
+            statusStyle={styles.ready}
+          />
+        </TouchableOpacity>
 
-        <PostItem
-          emoji="👍"
-          title="Jueves de 20% de desc."
-          subtitle="Juev., 1:00 PM - Instagram"
-          status="Listo"
-          statusStyle={styles.ready}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('VistaPreviaScreen')}>
+          <PostItem
+            emoji="👍"
+            title="Jueves de 20% de desc."
+            subtitle="Juev., 1:00 PM - Instagram"
+            status="Listo"
+            statusStyle={styles.ready}
+          />
+        </TouchableOpacity>
 
         <Text style={styles.sectionTitle}>Sugerencias del día</Text>
         <View style={styles.suggestionsContainer}>

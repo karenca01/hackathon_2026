@@ -10,14 +10,22 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
+import sessionStore from '../../services/sesion';
+import { searchUser } from '../../services/api';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // TODO: Implement real auth logic
-    navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
+  const handleLogin = async () => {
+    try {
+      const userData = await searchUser({ correo: email, cont: password });
+      await sessionStore.setUserData(userData);
+      navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
+    } catch (error) {
+      alert('Usuario no existe o contraseña incorrecta');
+      console.error(error);
+    }
   };
 
   return (
