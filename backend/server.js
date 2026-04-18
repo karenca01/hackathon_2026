@@ -14,9 +14,8 @@ if(!API_KEY) {
   process.exit(1);
 }
 
-const genAI = new GoogleGenerativeAI(API_KEY, {apiVersion:'v1'});
-const model = genAI.getGenerativeModel({ model:'gemini-1.0-pro' });
-
+const genAI = new GoogleGenerativeAI(API_KEY);
+const model = genAI.getGenerativeModel({ model:'gemini-2.5-pro' });
 async function quickGenerate(question){
   const quickPrompt = `You are an exper social media marketing strategist specializing in small businesses. Give a quick answer to the following question: ${question}`;
 
