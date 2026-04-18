@@ -16,6 +16,7 @@ if(!API_KEY) {
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({ model:'gemini-2.5-mini' });
+
 async function quickGenerate(question){
   const quickPrompt = `You are an expert social media marketing strategist specializing in small businesses. Give a quick answer to the following question: ${question}`;
 
@@ -28,6 +29,51 @@ async function quickGenerate(question){
         console.error('Error generating content:', error);
         throw new Error('Failed to generate marketing suggestions.');
     }
+}
+
+async function generarVector(texto) {
+  const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
+  const result = await model.embedContent(texto);
+  return result.embedding.values;
+}
+
+async function longGenerate(question){
+  const db = await connectDB();
+  const collection = db.collection('sugerencias');
+  const queryVector = await generarVector(question);
+
+  const resultados = await collection.aggregate([
+    {
+      "$vectorSearch": {
+        "index": "vector_index",
+        "path": "embedding_vtr",
+        "queryVector": queryVector,
+        "numCandidates": 10,
+        "limit": 3
+      }
+    }
+  ]).toArray();
+
+  const contextText = resultados
+    .map((item, index) => `Resultado ${index + 1}: ${item.desc || item.text || JSON.stringify(item)}`)
+    .join('\n');
+
+  const longPrompt = `Eres un estratega experto en marketing digital para pequeñas empresas. Usa la consulta original y los resultados de búsqueda vectorial para crear una respuesta clara, accionable y fácil de formatear.
+
+Consulta original: ${question}
+
+Resultados similares encontrados:
+${contextText}
+
+Genera una respuesta con:
+1. Resumen breve
+2. Ideas concretas
+3. Recomendaciones prácticas
+4. Formato listo para mostrar en aplicación móvil.`;
+
+  const result = await model.generateContent(longPrompt);
+  const response = await result.response;
+  return response.text();
 }
 
 // Middleware
@@ -200,4 +246,14 @@ app.post('/api/genai', async (req, res) => {
      } catch (error) {
          res.status(500).json({ error: error.message });
      }
+});
+
+app.post('/api/gensuggest', async (req, res) => {
+  const query = req.body.query;
+  try {
+    const suggestions = await longGenerate(query);
+    res.json({ suggestions });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });

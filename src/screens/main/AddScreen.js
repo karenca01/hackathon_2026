@@ -16,6 +16,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { longGen } from '../../services/api';
 
 export default function AddScreen() {
   const [title, setTitle] = useState('');
@@ -97,6 +98,62 @@ export default function AddScreen() {
       Alert.alert('Guardado', 'Elemento guardado correctamente.');
     }
     // Reset form or navigate back
+  };
+
+  const buildLongQuery = () => {
+    const queryParts = [
+      `Título: ${title}`,
+      `Tipo: ${selectedType}`,
+    ];
+
+    if (description) queryParts.push(`Descripción: ${description}`);
+    if (selectedType === 'idea') queryParts.push(`Formato: ${selectedIdeaFormat}`);
+    if (selectedType === 'task') {
+      queryParts.push(`Objetivo: ${taskGoal}`);
+      if (taskTargetDate) queryParts.push(`Fecha objetivo: ${taskTargetDate.toLocaleDateString()}`);
+    }
+    if (selectedType === 'event') {
+      queryParts.push(`Fecha del evento: ${eventDate.toLocaleDateString()}`);
+      queryParts.push(`Hora del evento: ${eventHour.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`);
+      if (selectedPreset) {
+        const preset = presets.find((item) => item.id === selectedPreset);
+        if (preset) queryParts.push(`Preset seleccionado: ${preset.name}`);
+      }
+    }
+    if (selectedType === 'preset') {
+      queryParts.push(`Cantidad de archivos multimedia: ${presetMediaList.length}`);
+      if (presetMediaList.length > 0) {
+        queryParts.push(`Media: ${presetMediaList.map((item) => item.uri).join(', ')}`);
+      }
+    }
+
+    if (taskGoal && selectedType !== 'task') {
+      queryParts.push(`Meta adicional: ${taskGoal}`);
+    }
+
+    return queryParts.filter(Boolean).join('. ');
+  };
+
+  const handleGenerateSuggestion = async () => {
+    if (!title.trim() && !description.trim() && !taskGoal.trim()) {
+      Alert.alert('Error', 'Ingresa al menos un título, descripción o objetivo para generar la sugerencia.');
+      return;
+    }
+
+    const query = buildLongQuery();
+    try {
+      const response = await longGen(query);
+      if (typeof response === 'string') {
+        Alert.alert('Sugerencia generada', response);
+      } else if (response?.suggestions) {
+        Alert.alert('Sugerencia generada', response.suggestions);
+      } else {
+        Alert.alert('Sugerencia generada', JSON.stringify(response));
+      }
+    } catch (error) {
+      console.error('Error generating suggestion:', error);
+      Alert.alert('Error', 'No se pudo generar la sugerencia.');
+    }
   };
 
   const ideaFormats = [
@@ -332,6 +389,10 @@ export default function AddScreen() {
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
           <Text style={styles.saveBtnText}>Guardar</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.saveBtn, styles.generateBtn]} onPress={handleGenerateSuggestion}>
+          <Text style={styles.saveBtnText}>Generar sugerencia</Text>
+        </TouchableOpacity>
       </ScrollView>
 
       {showDatePicker && (
@@ -507,6 +568,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  generateBtn: {
+    backgroundColor: '#4B5563',
   },
   saveBtnText: {
     color: '#FFFFFF',

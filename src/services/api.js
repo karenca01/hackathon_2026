@@ -42,3 +42,7 @@ export const quickGen = (data) => apiRequest('/genai', {
     method: "POST",
     body: JSON.stringify({question: data}),
 });
+export const longGen = (data) => apiRequest('/gensuggest', {
+    method: "POST",
+    body: JSON.stringify({query: data}),
+});
