@@ -1,21 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import sessionStore from '../../services/sesion';
+import { getBusiness } from '../../services/api';
 
 export default function ProfileScreen({ navigation }) {
   const [userData, setUserData] = useState(null);
   const [businessData, setBusinessData] = useState(null);
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      const data = await sessionStore.getUserData();
-      setUserData(data);
-      const bData = await getBusiness(userData._id);
-      setBusinessData(bData);
-    };
-    loadUserData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadProfile = async () => {
+        try {
+          const data = await sessionStore.getUserData();
+          if (!isActive) return;
+          setUserData(data);
+
+          if (data?._id) {
+            const bData = await getBusiness(data._id);
+            if (!isActive) return;
+            setBusinessData(bData);
+          }
+        } catch (error) {
+          console.error('Error cargando perfil:', error);
+        }
+      };
+
+      loadProfile();
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   const handleLogOut = async () => {
     await sessionStore.clearSession();
@@ -40,8 +59,8 @@ export default function ProfileScreen({ navigation }) {
               <Text style={styles.avatarText}></Text>
             </View>
             <View style={styles.profileTextContainer}>
-              <Text style={styles.businessName}>{userData?.nombre || 'Usuario'}</Text>
-              <Text style={styles.location}>{businessData?.ubicacion || 'Ubicacion'}</Text>
+              <Text style={styles.businessName}>{businessData?.negocio || userData?.nombre || 'Usuario'}</Text>
+              <Text style={styles.location}>{businessData?.ubicacion || 'Ubicación'}</Text>
               <View style={styles.planBadge}>
                 <Text style={styles.planText}>Plan Gratuito</Text>
               </View>
