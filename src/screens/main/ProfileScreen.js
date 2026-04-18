@@ -1,18 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import sessionStore from '../../services/sesion';
+import { getBusiness } from '../../services/api';
 
 export default function ProfileScreen({ navigation }) {
   const [userData, setUserData] = useState(null);
+  const [businessData, setBusinessData] = useState(null);
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      const data = await sessionStore.getUserData();
-      setUserData(data);
-    };
-    loadUserData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadProfile = async () => {
+        try {
+          const data = await sessionStore.getUserData();
+          if (!isActive) return;
+          setUserData(data);
+
+          if (data?._id) {
+            const bData = await getBusiness(data._id);
+            if (!isActive) return;
+            setBusinessData(bData);
+          }
+        } catch (error) {
+          console.error('Error cargando perfil:', error);
+        }
+      };
+
+      loadProfile();
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   const handleLogOut = async () => {
     await sessionStore.clearSession();
@@ -57,10 +79,10 @@ export default function ProfileScreen({ navigation }) {
                 <Text style={styles.avatarText}>📸</Text>
               </View>
               <View style={styles.profileTextContainer}>
-                <Text style={styles.businessName}>{userName}</Text>
-                <Text style={styles.location}>Juriquilla, Querétaro • ☕ Cafetería</Text>
+                <Text style={styles.businessName}>{userData?.negocio || userData?.nombre || 'Usuario'}</Text>
+                <Text style={styles.location}>{businessData?.negocio || 'Negocio'} - {businessData?.ubicacion || 'Ubicación'}</Text>
                 <View style={styles.planBadge}>
-                  <Text style={styles.planText}>Plan Gratis</Text>
+                  <Text style={styles.planText}>Plan Gratuito</Text>
                 </View>
               </View>
             </View>

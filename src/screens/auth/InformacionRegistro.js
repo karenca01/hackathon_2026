@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -11,10 +11,10 @@ import {
     StatusBar,
     Alert
 } from 'react-native';
+import sessionStore from '../../services/sesion';
 import { createBusiness } from '../../services/api';
 
 export default function InformacionRegistro({ navigation }) {
-    const [name, setName] = useState('');
     const [negocio, setNegocio] = useState('');
     const [productos, setProductos] = useState('');
     const [ubicacion, setUbicacion] = useState('');
@@ -22,21 +22,26 @@ export default function InformacionRegistro({ navigation }) {
     const [valores, setValores] = useState('');
     const [impacto, setImpacto] = useState('');
     const [redes, setRedes] = useState('');
-    const [vision, setVision] = useState('');
-    const [mision, setMision] = useState('');
     const [metas, setMetas] = useState('');
+    const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      const data = await sessionStore.getUserData();
+      setUserData(data);
+    };
+    loadUserData();
+  }, []);
 
     const handleSignUp = async () => {
         // Validación de campos vacíos
-        if (!name || !negocio || !productos || !ubicacion || !descripcion ||
-            !valores || !impacto || !redes || !vision || !mision || !metas) {
-            Alert.alert('Atención', 'Por favor, completa todos los campos');
+        if (!negocio || !productos || !ubicacion || !descripcion || !redes ) {
+            Alert.alert('Atención', 'Por favor, completa todos los campos obligatorios');
             return;
         }
 
         try {
             await createBusiness({
-                nombre: name,
                 negocio,
                 productos,
                 ubicacion,
@@ -44,9 +49,8 @@ export default function InformacionRegistro({ navigation }) {
                 valores,
                 impacto,
                 redes,
-                vision,
-                mision,
-                metas
+                metas,
+                usuario: userData._id
             });
 
             navigation.reset({
@@ -60,16 +64,20 @@ export default function InformacionRegistro({ navigation }) {
     };
 
     // Componente reutilizable para los inputs
-    const CustomInput = ({ label, value, onChangeText, placeholder, multiline = false }) => (
+    const CustomInput = ({ label, value, onEndEditing, placeholder, multiline = false }) => (
         <View style={styles.inputGroup}>
             <Text style={styles.label}>{label}</Text>
             <TextInput
                 style={[styles.input, multiline && styles.textArea]}
-                value={value}
-                onChangeText={onChangeText}
+                defaultValue={value}
+                onEndEditing={({ nativeEvent }) => onEndEditing(nativeEvent.text)}
                 placeholder={placeholder}
                 placeholderTextColor="#666"
                 multiline={multiline}
+                blurOnSubmit={!multiline}
+                returnKeyType={multiline ? 'default' : 'next'}
+                autoCorrect={false}
+                autoCapitalize="sentences"
             />
         </View>
     );
@@ -80,7 +88,13 @@ export default function InformacionRegistro({ navigation }) {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
             <StatusBar barStyle="light-content" />
-            <ScrollView contentContainerStyle={styles.inner} showsVerticalScrollIndicator={false}>
+            <ScrollView
+                style={styles.scrollView}
+                contentContainerStyle={[styles.inner, { flexGrow: 1 }]}
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="always"
+                keyboardDismissMode="none"
+            >
                 <View style={styles.header}>
                     <Text style={styles.logo}>🚀</Text>
                     <Text style={styles.title}>Tu Negocio</Text>
@@ -88,17 +102,14 @@ export default function InformacionRegistro({ navigation }) {
                 </View>
 
                 <View style={styles.form}>
-                    <CustomInput label="Nombre del Responsable" value={name} onChangeText={setName} placeholder="Ej. Juan Pérez" />
-                    <CustomInput label="Nombre del Negocio" value={negocio} onChangeText={setNegocio} placeholder="Nombre comercial" />
-                    <CustomInput label="Productos/Servicios" value={productos} onChangeText={setProductos} placeholder="¿Qué vendes o cual; es tu producto?" multiline={true} />
-                    <CustomInput label="Ubicación" value={ubicacion} onChangeText={setUbicacion} placeholder="Dirección física o ciudad" />
-                    <CustomInput label="Descripción" value={descripcion} onChangeText={setDescripcion} placeholder="Descripcion de tu negocio negocio" multiline={true} />
-                    <CustomInput label="Valores" value={valores} onChangeText={setValores} placeholder="Ej. Honestidad, Innovación" />
-                    <CustomInput label="Impacto Social" value={impacto} onChangeText={setImpacto} placeholder="¿Cómo ayudas a la comunidad?" multiline={true} />
-                    <CustomInput label="Redes Sociales" value={redes} onChangeText={setRedes} placeholder="@tuusuario / links" />
-                    <CustomInput label="Visión" value={vision} onChangeText={setVision} placeholder="¿Cual es la vison de tu negocio" multiline={true} />
-                    <CustomInput label="Misión" value={mision} onChangeText={setMision} placeholder="¿Cuál es el proposito de tu negocio?" multiline={true} />
-                    <CustomInput label="Metas" value={metas} onChangeText={setMetas} placeholder="¿Cuales son las metas de tu negocio?" multiline={true} />
+                    <CustomInput label="Nombre del Negocio *" value={negocio} onEndEditing={setNegocio} placeholder="Nombre comercial" />
+                    <CustomInput label="Productos/Servicios *" value={productos} onEndEditing={setProductos} placeholder="¿Qué vendes o cuál es tu producto?" multiline={true} />
+                    <CustomInput label="Ubicación *" value={ubicacion} onEndEditing={setUbicacion} placeholder="Dirección física o ciudad" />
+                    <CustomInput label="Descripción *" value={descripcion} onEndEditing={setDescripcion} placeholder="Descripcion de tu negocio" multiline={true} />
+                    <CustomInput label="Valores" value={valores} onEndEditing={setValores} placeholder="Ej. Honestidad, Innovación" />
+                    <CustomInput label="Impacto Social" value={impacto} onEndEditing={setImpacto} placeholder="¿Cómo ayudas a la comunidad?" multiline={true} />
+                    <CustomInput label="Redes Sociales *" value={redes} onEndEditing={setRedes} placeholder="¿En cuáles redes sociales te encuentras?" />
+                    <CustomInput label="Metas" value={metas} onEndEditing={setMetas} placeholder="¿Cuales son las metas de tu negocio?" multiline={true} />
 
                     <TouchableOpacity style={styles.signUpBtn} onPress={handleSignUp}>
                         <Text style={styles.signUpBtnText}>Guardar y Continuar</Text>
@@ -139,6 +150,9 @@ const styles = StyleSheet.create({
     },
     form: {
         gap: 20,
+    },
+    scrollView: {
+        flex: 1,
     },
     inputGroup: {
         gap: 8,
