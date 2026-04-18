@@ -40,5 +40,5 @@ export const deleteBusiness = (id) => apiRequest(`/businesses/${id}`, {  // Dele
 });
 export const quickGen = (data) => apiRequest('/genai', {
     method: "POST",
-    body: JSON.stringify(data),
+    body: JSON.stringify({question: data}),
 });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import sessionStore from '../../services/sesion';
 import { quickGen } from '../../services/api';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function HomeScreen() {
   const [idea, setIdea] = useState('');
@@ -47,7 +48,7 @@ export default function HomeScreen() {
   const handleQuickGen = async () => {
     const answer = await quickGen(idea);
     setResp(answer);
-    setStatusBarNetworkActivityIndicatorVisible(true);
+    setIsVisible(true);
   }
 
   const getTagStyle = (tag) => {

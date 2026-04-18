@@ -193,8 +193,8 @@ app.listen(port, '0.0.0.0', () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
 
-app.post('/api/genai/', async (req, res) => {
-  const question = req.body;
+app.post('/api/genai', async (req, res) => {
+  const question = req.body.question;
   try {
          const suggestions = await quickGenerate(question);
          res.json({ suggestions });
