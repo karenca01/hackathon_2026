@@ -26,7 +26,7 @@ async function connectDB() {
   try {
     await client.connect();
     console.log("Conectado a MongoDB!");
-    return client.db("hackathon_2026"); 
+    return client.db("hackathon_2026");
   } catch (error) {
     console.error("Error conectando a MongoDB:", error);
     throw error;
@@ -48,12 +48,32 @@ app.get('/api/test', async (req, res) => {
 app.post('/api/businesses', async (req, res) => {
   try {
     const db = await connectDB();
-    const { nombre, desc, usuario } = req.body;
+    const { nombre,
+      negocio,
+      productos,
+      ubicacion,
+      descripcion,
+      valores,
+      impacto,
+      redes,
+      vision,
+      mision,
+      metas,
+      usuario } = req.body;
 
     const result = await db.collection('negocio').insertOne({
       nombre,
-      desc,
-      usuario,
+      negocio,
+      productos,
+      ubicacion,
+      descripcion,
+      valores,
+      impacto,
+      redes,
+      vision,
+      mision,
+      metas,
+      usuario
     });
 
     res.status(201).json({ message: 'Negocio creado', insertedId: result.insertedId });

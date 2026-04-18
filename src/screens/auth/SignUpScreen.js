@@ -26,7 +26,11 @@ export default function SignUpScreen({ navigation }) {
 
     try {
       await createUser({ nombre: name, correo: email, cont: password });
-      navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
+      // Primero completar la información de la empresa, luego ir al Main
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main', params: { screen: 'Inicio', params: { screen: 'InformacionRegistro' } } }],
+      });
     } catch (error) {
       alert('Error creando usuario');
       console.error(error);
