@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -8,13 +8,53 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
-  TextInput
+  TextInput,
+  Modal,
+  Button,
 } from 'react-native';
 import sessionStore from '../../services/sesion';
+import { quickGen } from '../../services/api';
+import { useFocusEffect } from '@react-navigation/native';
+import { getBusiness } from '../../services/api';
+
 
 export default function HomeScreen() {
   const [idea, setIdea] = useState('');
+  const [resp, setResp] = useState(null);
   const navigation = useNavigation(); // <-- 1. Agregamos la navegación al HomeScreen
+  const [userData, setUserData] = useState(null);
+  const [businessData, setBusinessData] = useState(null);
+  const [ isVisible, setIsVisible ] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadProfile = async () => {
+        try {
+          const data = await sessionStore.getUserData();
+          if (!isActive) return;
+          setUserData(data);
+
+          if (data?._id) {
+            const bData = await getBusiness(data._id);
+            if (!isActive) return;
+            setBusinessData(bData);
+          }
+        } catch (error) {
+          console.error('Error cargando perfil:', error);
+        }
+      };
+
+      loadProfile();
+    }, [])
+  );
+
+  const handleQuickGen = async () => {
+    const answer = await quickGen(idea);
+    setResp(answer);
+    setIsVisible(true);
+  }
 
   const getTagStyle = (tag) => {
     switch (tag) {
@@ -36,7 +76,7 @@ export default function HomeScreen() {
 
       {/* HEADER */}
       <View style={styles.header}>
-        <Text style={styles.title}>Cafetería el Rincon</Text>
+        <Text style={styles.title}>{businessData?.negocio || 'Negocio'}</Text>
 
         <View style={styles.headerRight}>
 
@@ -49,7 +89,7 @@ export default function HomeScreen() {
             style={styles.avatar}
             onPress={() => navigation.navigate('ProfileScreen')}
           >
-            <Text style={styles.avatarText}>U</Text>
+            <Text style={styles.avatarText}>{userData?.nombre.charAt(0) || ""}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -72,10 +112,29 @@ export default function HomeScreen() {
             onChangeText={setIdea}
           />
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={handleQuickGen}>
             <Text style={styles.buttonText}>⚡ Generar con IA</Text>
           </TouchableOpacity>
         </View>
+
+        <Modal
+          visible={isVisible}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setIsVisible(false)}
+        >
+          <TouchableOpacity
+            style={styles.overlay}
+            activeOpacity={1}
+            onPress={() => setIsVisible(false)}
+          >
+            <View style={styles.modalContent}>
+              <Text style={styles.title}>{idea}</Text>
+              <Text>{resp?.texto || "Pensando..."}</Text>
+              <Button title="Close" onPress={() => setIsVisible(false)} />
+            </View>
+          </TouchableOpacity>
+        </Modal>
 
         {/* STATS */}
         <Text style={styles.sectionTitle}>Esta semana</Text>

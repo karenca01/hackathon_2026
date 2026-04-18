@@ -29,7 +29,7 @@ export const createUser = (data) => apiRequest('/user', {  // Create
 export const searchUser = (data) => apiRequest('/user/find', {
     method: "POST",
     body: JSON.stringify(data),
-})
+});
 export const getBusiness = (id) => apiRequest(`/businesses/${id}`);  // Read
 export const updateBusiness = (id, data) => apiRequest(`/businesses/${id}`, {  // Update
   method: 'PUT',
@@ -37,4 +37,8 @@ export const updateBusiness = (id, data) => apiRequest(`/businesses/${id}`, {  /
 });
 export const deleteBusiness = (id) => apiRequest(`/businesses/${id}`, {  // Delete
   method: 'DELETE',
+});
+export const quickGen = (data) => apiRequest('/genai', {
+    method: "POST",
+    body: JSON.stringify({question: data}),
 });
