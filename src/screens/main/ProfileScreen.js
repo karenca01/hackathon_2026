@@ -5,11 +5,14 @@ import sessionStore from '../../services/sesion';
 
 export default function ProfileScreen({ navigation }) {
   const [userData, setUserData] = useState(null);
+  const [businessData, setBusinessData] = useState(null);
 
   useEffect(() => {
     const loadUserData = async () => {
       const data = await sessionStore.getUserData();
       setUserData(data);
+      const bData = await getBusiness(userData._id);
+      setBusinessData(bData);
     };
     loadUserData();
   }, []);
@@ -34,13 +37,13 @@ export default function ProfileScreen({ navigation }) {
 
           <View style={styles.profileInfo}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>Aqui va el logo de la empresa</Text>
+              <Text style={styles.avatarText}></Text>
             </View>
             <View style={styles.profileTextContainer}>
               <Text style={styles.businessName}>{userData?.nombre || 'Usuario'}</Text>
-              <Text style={styles.location}>ubicacion desde la base de datos</Text>
+              <Text style={styles.location}>{businessData?.ubicacion || 'Ubicacion'}</Text>
               <View style={styles.planBadge}>
-                <Text style={styles.planText}>Plan (nombre del plan)</Text>
+                <Text style={styles.planText}>Plan Gratuito</Text>
               </View>
             </View>
           </View>

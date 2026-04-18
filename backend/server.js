@@ -56,12 +56,10 @@ app.post('/api/businesses', async (req, res) => {
       valores,
       impacto,
       redes,
-      vision,
       metas,
       usuario } = req.body;
 
     const result = await db.collection('negocio').insertOne({
-      nombre,
       negocio,
       productos,
       ubicacion,
@@ -69,7 +67,6 @@ app.post('/api/businesses', async (req, res) => {
       valores,
       impacto,
       redes,
-      vision,
       metas,
       usuario
     });
@@ -124,7 +121,7 @@ app.get('/api/businesses/:id', async (req, res) => {
   try {
     const db = await connectDB();
     const { id } = req.params;
-    const business = await db.collection('negocio').findOne({ _id: new ObjectId(id) });
+    const business = await db.collection('negocio').findOne({ usuario: id });
 
     if (!business) return res.status(404).json({ error: 'Negocio no encontrado' });
     res.json(business);

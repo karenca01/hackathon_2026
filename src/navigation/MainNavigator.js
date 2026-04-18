@@ -14,7 +14,7 @@ import ProfileScreen from '../screens/main/ProfileScreen';
 import DetalleIdeaScreen from '../screens/main/DetalleIdeaScreen';
 import CrearPostScreen from '../screens/main/CrearPostScreen';
 import SettingsScreen from '../screens/main/SettingsScreen';
-import InformacionRegistro from '../screens/main/InformacionRegistro';
+import InformacionRegistro from '../screens/auth/InformacionRegistro';
 
 import VistaPreviaScreen from '../screens/main/VistaPreviaScreen';
 // Nota: Se eliminó la importación duplicada de NotificationScreen
