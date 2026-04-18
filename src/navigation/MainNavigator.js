@@ -14,6 +14,8 @@ import ProfileScreen from '../screens/main/ProfileScreen';
 import DetalleIdeaScreen from '../screens/main/DetalleIdeaScreen';
 import CrearPostScreen from '../screens/main/CrearPostScreen';
 import SettingsScreen from '../screens/main/SettingsScreen';
+import InformacionRegistro from '../screens/main/InformacionRegistro';
+
 import VistaPreviaScreen from '../screens/main/VistaPreviaScreen';
 // Nota: Se eliminó la importación duplicada de NotificationScreen
 import NotificationScreen from '../screens/main/NotificationScreen';
@@ -49,6 +51,7 @@ function HomeStackNavigator() {
       <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
       <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="InformacionRegistro" component={InformacionRegistro} />
       <Stack.Screen name="VistaPreviaScreen" component={VistaPreviaScreen} />
     </Stack.Navigator>
   );
@@ -62,6 +65,7 @@ function IdeasStackNavigator() {
       <Stack.Screen name="DetalleIdeaScreen" component={DetalleIdeaScreen} />
       <Stack.Screen name="CrearPostScreen" component={CrearPostScreen} />
       <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+      <Stack.Screen name="InformacionRegistro" component={InformacionRegistro} />
       <Stack.Screen name="VistaPreviaScreen" component={VistaPreviaScreen} />
     </Stack.Navigator>
   );
