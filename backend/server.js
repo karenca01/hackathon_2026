@@ -123,6 +123,8 @@ app.get('/api/businesses/:id', async (req, res) => {
     const { id } = req.params;
     const business = await db.collection('negocio').findOne({ usuario: id });
 
+    console.log(business);
+
     if (!business) return res.status(404).json({ error: 'Negocio no encontrado' });
     res.json(business);
   } catch (error) {
