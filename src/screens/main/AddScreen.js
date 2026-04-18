@@ -365,9 +365,9 @@ export default function AddScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+ container: {
     flex: 1,
-    backgroundColor: '#0F0F1A',
+    backgroundColor: '#F5F6FA', // Fondo claro
   },
   content: {
     paddingHorizontal: 24,
@@ -378,19 +378,19 @@ const styles = StyleSheet.create({
     marginBottom: 28,
   },
   title: {
-    color: '#FFFFFF',
+    color: '#111827', // Negro suave
     fontSize: 28,
     fontWeight: '700',
     marginBottom: 6,
   },
   subtitle: {
-    color: '#9E9E9E',
+    color: '#6B7280', // Gris moderno
     fontSize: 14,
   },
   label: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#CCCCCC',
+    color: '#4B5563',
     marginBottom: 8,
     marginTop: 16,
   },
@@ -403,45 +403,45 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 12,
-    backgroundColor: '#1E1E2E',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#2A2A3E',
+    borderColor: '#E5E7EB',
     marginRight: 10,
   },
   typeChipActive: {
-    backgroundColor: '#6C63FF',
-    borderColor: '#6C63FF',
+    backgroundColor: '#F3E8FF', // Morado muy claro
+    borderColor: '#8B5CF6',
   },
   typeChipText: {
-    color: '#9E9E9E',
+    color: '#6B7280',
     fontSize: 14,
     fontWeight: '600',
   },
   typeChipTextActive: {
-    color: '#FFFFFF',
+    color: '#6C63FF',
   },
   input: {
-    backgroundColor: '#1E1E2E',
+    backgroundColor: '#FFFFFF',
     borderRadius: 14,
     paddingHorizontal: 18,
     paddingVertical: 14,
-    color: '#FFFFFF',
+    color: '#1F2937',
     fontSize: 15,
     borderWidth: 1,
-    borderColor: '#2A2A3E',
+    borderColor: '#E5E7EB',
   },
   inputText: {
-    color: '#FFFFFF',
+    color: '#1F2937',
     fontSize: 15,
   },
   textArea: {
     height: 120,
   },
   mediaContainer: {
-    backgroundColor: '#1E1E2E',
+    backgroundColor: '#FFFFFF',
     borderRadius: 14,
     borderWidth: 2,
-    borderColor: '#2A2A3E',
+    borderColor: '#E5E7EB',
     borderStyle: 'dashed',
     padding: 12,
     marginBottom: 16,
@@ -470,7 +470,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#EF4444', // Rojo más moderno
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 10,
@@ -484,9 +484,9 @@ const styles = StyleSheet.create({
     width: '48%',
     aspectRatio: 1,
     borderRadius: 10,
-    backgroundColor: '#2A2A3E',
+    backgroundColor: '#FFFFFF',
     borderWidth: 2,
-    borderColor: '#6C63FF',
+    borderColor: '#8B5CF6',
     borderStyle: 'dashed',
     justifyContent: 'center',
     alignItems: 'center',
@@ -502,11 +502,11 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 24,
-    shadowColor: '#6C63FF',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   saveBtnText: {
     color: '#FFFFFF',
@@ -520,30 +520,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 12,
-    backgroundColor: '#1E1E2E',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#2A2A3E',
+    borderColor: '#E5E7EB',
     marginRight: 10,
   },
   presetChipActive: {
-    backgroundColor: '#6C63FF',
-    borderColor: '#6C63FF',
+    backgroundColor: '#F3E8FF',
+    borderColor: '#8B5CF6',
   },
   presetChipText: {
-    color: '#9E9E9E',
+    color: '#6B7280',
     fontSize: 14,
     fontWeight: '600',
   },
   presetChipTextActive: {
-    color: '#FFFFFF',
+    color: '#6C63FF',
   },
   templateChip: {
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 12,
-    backgroundColor: '#1E1E2E',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#6C63FF',
+    borderColor: '#8B5CF6',
     marginRight: 10,
   },
   templateChipText: {
