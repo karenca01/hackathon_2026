@@ -10,6 +10,7 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
+import sessionStore from '../../services/sesion';
 import { createUser } from '../../services/api';
 
 export default function SignUpScreen({ navigation }) {
@@ -25,7 +26,8 @@ export default function SignUpScreen({ navigation }) {
     }
 
     try {
-      await createUser({ nombre: name, correo: email, cont: password });
+      const userData = await createUser({ nombre: name, correo: email, cont: password });
+      await sessionStore.setToken(userData._id);
       navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
     } catch (error) {
       alert('Error creando usuario');

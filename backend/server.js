@@ -73,7 +73,24 @@ app.post('/api/user', async (req, res) => {
       cont,
     });
 
-    res.status(201).json({ message: 'Usuario creado', insertedId: result.insertedId });
+    res.status(201).json({ message: 'Usuario creado', _id: result.insertedId });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/user/find', async (req, res) => {
+  try {
+    const db = await connectDB();
+    const { correo, cont } = req.body;
+
+    const result = await db.collection('usuarios').findOne({
+      correo: correo,
+      cont: cont,
+    });
+
+    if (!result) return res.status(404).json({ error: 'Usuario no encontrado' });
+    res.json({ _id: result._id, nombre: result.nombre, correo: result.correo });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

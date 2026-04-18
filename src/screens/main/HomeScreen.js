@@ -10,10 +10,12 @@ import {
   TouchableOpacity,
   TextInput
 } from 'react-native';
+import sessionStore from '../../services/sesion';
 
 export default function HomeScreen() {
   const [idea, setIdea] = useState('');
   const navigation = useNavigation(); // <-- 1. Agregamos la navegación al HomeScreen
+  const correo = sessionStore.getToken();
 
   const getTagStyle = (tag) => {
     switch (tag) {
@@ -30,6 +32,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      
       <StatusBar barStyle="dark-content" />
 
       {/* HEADER */}
