@@ -13,7 +13,9 @@ import ProfileScreen from '../screens/main/ProfileScreen';
 // Importaciones de las pantallas secundarias
 import DetalleIdeaScreen from '../screens/main/DetalleIdeaScreen';
 import CrearPostScreen from '../screens/main/CrearPostScreen';
-import NotificationScreen from '../screens/main/NotificationScreen'; // <-- 1. IMPORTAR NOTIFICACIONES
+import NotificationScreen from '../screens/main/NotificationScreen'; 
+import SettingsScreen from '../screens/main/SettingsScreen';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -57,6 +59,7 @@ function IdeasStackNavigator() {
       <Stack.Screen name="IdeasMain" component={IdeasScreen} />
       <Stack.Screen name="DetalleIdeaScreen" component={DetalleIdeaScreen} />
       <Stack.Screen name="CrearPostScreen" component={CrearPostScreen} />
+      <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
     </Stack.Navigator>
   );
 }
