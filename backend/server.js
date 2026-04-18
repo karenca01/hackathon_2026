@@ -38,7 +38,7 @@ app.get('/api/test', async (req, res) => {
   try {
     const db = await connectDB();
     await db.admin().command({ ping: 1 });
-    res.json({ message: "Conexión exitosa a MongoDB!" });
+    res.json({ message: "Conexión exitosa a MongoDB" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -73,6 +73,8 @@ app.post('/api/user', async (req, res) => {
       cont,
     });
 
+    console.log(result);
+
     res.status(201).json({ message: 'Usuario creado', _id: result.insertedId });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -84,7 +86,7 @@ app.post('/api/user/find', async (req, res) => {
     const db = await connectDB();
     const { correo, cont } = req.body;
 
-    console.log(correo);
+    console.log("correo");
 
     const result = await db.collection('usuarios').findOne({
       correo: correo,
