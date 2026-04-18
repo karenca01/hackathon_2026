@@ -7,6 +7,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 
 const DAYS = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
@@ -18,65 +19,100 @@ const EVENTS = [
 
 export default function CalendarScreen() {
   const [selectedDay, setSelectedDay] = useState(3);
+  const [currentMonth, setCurrentMonth] = useState(
+    new Date().toLocaleDateString('es-MX', {
+      month: 'long',
+      year: 'numeric',
+    })
+  );
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>📅 Calendario</Text>
-          <Text style={styles.subtitle}>Abril 2026</Text>
-        </View>
-
-        {/* Week strip */}
-        <View style={styles.weekStrip}>
-          {DAYS.map((day, index) => (
-            <TouchableOpacity
-              key={day}
-              style={[styles.dayBtn, selectedDay === index && styles.dayBtnActive]}
-              onPress={() => setSelectedDay(index)}
-            >
-              <Text style={[styles.dayLabel, selectedDay === index && styles.dayLabelActive]}>
-                {day}
-              </Text>
-              <Text style={[styles.dayNum, selectedDay === index && styles.dayNumActive]}>
-                {14 + index}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Events */}
-        <Text style={styles.sectionTitle}>Eventos del día</Text>
-        {EVENTS.map((event) => (
-          <View key={event.id} style={styles.eventCard}>
-            <View style={[styles.eventDot, { backgroundColor: event.color }]} />
-            <View style={styles.eventInfo}>
-              <Text style={styles.eventTime}>{event.time}</Text>
-              <Text style={styles.eventTitle}>{event.title}</Text>
-            </View>
+      <View style={styles.calendarContainer}>
+        <StatusBar barStyle="light-content" />
+        <ScrollView contentContainerStyle={styles.content}>
+          <View style={styles.header}>
+            <Text style={styles.title}>📅 Calendario</Text>
           </View>
-        ))}
-      </ScrollView>
+
+          <RNcalendar />
+
+          {/* Events */}
+          <Text style={styles.sectionTitle}>Eventos del día</Text>
+          {EVENTS.map((event) => (
+            <View key={event.id} style={styles.eventCard}>
+              <View style={[styles.eventDot, { backgroundColor: event.color }]} />
+              <View style={styles.eventInfo}>
+                <Text style={styles.eventTime}>{event.time}</Text>
+                <Text style={styles.eventTitle}>{event.title}</Text>
+              </View>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
     </View>
   );
 }
 
+const RNcalendar = () => {
+  const [selected, setSelected] = useState('');
+  const [currentMonth, setCurrentMonth] = useState('');
+
+  return (
+    <>
+      <Calendar
+        style={styles.calendar}
+        enableSwipeMonths={true}
+
+        onDayPress={(day) => {
+          setSelected(day.dateString);
+        }}
+
+        onMonthChange={(month) => {
+          const date = new Date(month.timestamp);
+          const formatted = date.toLocaleDateString('es-MX', {
+            month: 'long',
+            year: 'numeric',
+          });
+          setCurrentMonth(formatted);
+        }}
+
+        markedDates={{
+          [selected]: {
+            selected: true,
+            selectedColor: '#6C63FF',
+          },
+        }}
+
+        theme={{
+          backgroundColor: '#EDE9FF',
+          calendarBackground: '#EDE9FF',
+          textSectionTitleColor: '#3d2a8aff',
+          dayTextColor: '#90869cff',
+          todayTextColor: '#6C63FF',
+          monthTextColor: '#3d2a8aff',
+          arrowColor: '#6C63FF',
+        }}
+      />
+    </>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F0F1A',
+    backgroundColor: '#F5F6FA',
   },
   content: {
     paddingHorizontal: 24,
     paddingTop: 60,
     paddingBottom: 30,
+    backgroundColor: '#F5F6FA',
   },
   header: {
     marginBottom: 28,
   },
   title: {
-    color: '#FFFFFF',
     fontSize: 28,
     fontWeight: '700',
     marginBottom: 6,
@@ -122,7 +158,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   sectionTitle: {
-    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 16,
@@ -130,12 +165,12 @@ const styles = StyleSheet.create({
   eventCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1E1E2E',
+    borderWidth: 1,
     borderRadius: 14,
+    borderColor: '#90869cff',
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#2A2A3E',
     gap: 14,
   },
   eventDot: {
@@ -152,8 +187,16 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   eventTitle: {
-    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '600',
   },
+  calendarContainer: {
+    flex: 1,
+    backgroundColor: '#0F0F1A',
+  },
+  calendar: {
+    borderRadius: 16,
+    padding: 10,
+    marginBottom: 20,
+  }
 });
