@@ -84,10 +84,14 @@ app.post('/api/user/find', async (req, res) => {
     const db = await connectDB();
     const { correo, cont } = req.body;
 
+    console.log(correo);
+
     const result = await db.collection('usuarios').findOne({
       correo: correo,
       cont: cont,
     });
+
+    console.log(result);
 
     if (!result) return res.status(404).json({ error: 'Usuario no encontrado' });
     res.json({ _id: result._id, nombre: result.nombre, correo: result.correo });
