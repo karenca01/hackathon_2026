@@ -9,7 +9,8 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
-  Modal
+  Modal,
+  Button,
 } from 'react-native';
 import sessionStore from '../../services/sesion';
 import { quickGen } from '../../services/api';
