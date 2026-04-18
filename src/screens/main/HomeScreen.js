@@ -15,6 +15,8 @@ import {
 import sessionStore from '../../services/sesion';
 import { quickGen } from '../../services/api';
 import { useFocusEffect } from '@react-navigation/native';
+import { getBusiness } from '../../services/api';
+
 
 export default function HomeScreen() {
   const [idea, setIdea] = useState('');
@@ -43,6 +45,8 @@ export default function HomeScreen() {
           console.error('Error cargando perfil:', error);
         }
       };
+
+      loadProfile();
     }, [])
   );
 
@@ -85,7 +89,7 @@ export default function HomeScreen() {
             style={styles.avatar}
             onPress={() => navigation.navigate('ProfileScreen')}
           >
-            <Text style={styles.avatarText}>U</Text>
+            <Text style={styles.avatarText}>{userData?.nombre.charAt(0) || ""}</Text>
           </TouchableOpacity>
         </View>
       </View>
