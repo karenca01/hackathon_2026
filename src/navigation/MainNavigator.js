@@ -18,6 +18,7 @@ import InformacionRegistro from '../screens/auth/InformacionRegistro';
 
 import VistaPreviaScreen from '../screens/main/VistaPreviaScreen';
 import NotificationScreen from '../screens/main/NotificationScreen';
+import CargandoScreen from '../screens/main/CargandoScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -51,6 +52,9 @@ function HomeStackNavigator() {
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="InformacionRegistro" component={InformacionRegistro} />
       <Stack.Screen name="VistaPreviaScreen" component={VistaPreviaScreen} />
+      <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+      <Stack.Screen name="CrearPostScreen" component={CrearPostScreen} />
+      <Stack.Screen name="CargandoScreen" component={CargandoScreen} />
     </Stack.Navigator>
   );
 }
@@ -78,6 +82,8 @@ function ProfileStackNavigator() {
     </Stack.Navigator>
   );
 }
+
+
 
 export default function MainNavigator() {
   return (
@@ -112,7 +118,6 @@ export default function MainNavigator() {
       <Tab.Screen name="Ideas" component={IdeasStackNavigator} />
       <Tab.Screen name="Agregar" component={AddScreen} />
       <Tab.Screen name="Calendario" component={CalendarScreen} />
-      {/* Actualizamos la pestaña Perfil para que use el nuevo Stack */}
       <Tab.Screen name="Perfil" component={ProfileStackNavigator} />
     </Tab.Navigator>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect}  from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,6 +11,38 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 export default function SettingsScreen({ navigation }) {
+
+    useEffect(() => {
+        const parent = navigation.getParent();
+            
+            if (parent) {
+                // Oculta el tab bar al entrar a la pantalla
+                parent.setOptions({
+                    tabBarStyle: { display: 'none' },
+                });
+            }
+    
+            return () => {
+                if (parent) {
+                    // Restaura los estilos originales del tab bar al salir de la pantalla
+                    parent.setOptions({
+                        tabBarStyle: {
+                            display: 'flex',
+                            backgroundColor: '#FFFFFF',
+                            borderTopWidth: 0,
+                            elevation: 10,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: -3 },
+                            shadowOpacity: 0.08,
+                            shadowRadius: 10,
+                            height: 65,
+                            paddingBottom: 10,
+                            paddingTop: 8,
+                        },
+                    });
+                }
+            };
+        }, [navigation]);
   return (
     <SafeAreaView style={styles.safeArea}>
       
