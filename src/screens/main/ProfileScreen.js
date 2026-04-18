@@ -46,18 +46,6 @@ export default function ProfileScreen({ navigation }) {
     }
   };
 
-  // Función para obtener iniciales (ej. "Cafetería El Rincón" -> "CE")
-  const getInitials = (name) => {
-    if (!name) return 'US';
-    const words = name.split(' ');
-    if (words.length >= 2) {
-      return (words[0][0] + words[1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-  };
-
-  const userName = userData?.nombre || 'Cafetería El Rincón';
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>

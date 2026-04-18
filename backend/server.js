@@ -5,6 +5,31 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const {GoogleGenerativeAI} = require('@google/generative-ai');
+
+const API_KEY = process.env.GEMINI_API_KEY;
+
+if(!API_KEY) {
+  console.error('GEMINI_API_KEY environment variable not set.');
+  process.exit(1);
+}
+
+const genAI = new GoogleGenerativeAI(API_KEY);
+const model = genAI.getGenerativeModel({ model:'gemini-pro' });
+
+async function quickGenerate(question){
+  const quickPrompt = `You are an exper social media marketing strategist specializing in small businesses. Give a quick answer to the following question: ${question}`;
+
+  try {
+        const result = await model.generateContent(quickPrompt);
+        const response = await result.response;
+        const text = response.text();
+        return text;
+    } catch (error) {
+        console.error('Error generating content:', error);
+        throw new Error('Failed to generate marketing suggestions.');
+    }
+}
 
 // Middleware
 app.use(cors());
@@ -166,4 +191,14 @@ app.delete('/api/businesses/:id', async (req, res) => {
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
+});
+
+app.post('/api/genai/', async (req, res) => {
+  const question = req.body;
+  try {
+         const suggestions = await quickGenerate(question);
+         res.json({ suggestions });
+     } catch (error) {
+         res.status(500).json({ error: error.message });
+     }
 });
