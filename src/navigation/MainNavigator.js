@@ -95,8 +95,8 @@ export default function MainNavigator() {
           shadowOffset: { width: 0, height: -3 },
           shadowOpacity: 0.08,
           shadowRadius: 10,
-          height: 65,
-          paddingBottom: 10,
+          height: 100,
+          paddingBottom: 15,
           paddingTop: 8,
         },
         tabBarLabelStyle: {
