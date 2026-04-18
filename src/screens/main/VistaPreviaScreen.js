@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
     height: 250,
     backgroundColor: '#F3E8FF',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center', 
     overflow: 'hidden', // <-- Agrega esto para que la imagen respete los bordes si los tuviera
   },
   postImage: {
