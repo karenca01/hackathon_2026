@@ -20,7 +20,7 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = async () => {
     try {
       const userData = await searchUser({ correo: email, cont: password });
-      await sessionStore.setToken(userData._id);
+      await sessionStore.setToken(userData);
       navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
     } catch (error) {
       alert('Usuario no existe o contraseña incorrecta');

@@ -1,8 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import sessionStore from '../../services/sesion';
 
 export default function ProfileScreen({ navigation }) {
+  const nombre = sessionStore.getToken().nombre;
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -15,7 +18,7 @@ export default function ProfileScreen({ navigation }) {
               <Text style={styles.avatarText}>Aqui va el logo de la empresa</Text>
             </View>
             <View style={styles.profileTextContainer}>
-              <Text style={styles.businessName}>nombre desde la base de datos</Text>
+              <Text style={styles.businessName}>{nombre}</Text>
               <Text style={styles.location}>ubicacion desde la base de datos</Text>
               <View style={styles.planBadge}>
                 <Text style={styles.planText}>Plan (nombre del plan)</Text>

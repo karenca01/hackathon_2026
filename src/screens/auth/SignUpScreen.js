@@ -27,7 +27,7 @@ export default function SignUpScreen({ navigation }) {
 
     try {
       const userData = await createUser({ nombre: name, correo: email, cont: password });
-      await sessionStore.setToken(userData._id);
+      await sessionStore.setToken(userData);
       navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
     } catch (error) {
       alert('Error creando usuario');
