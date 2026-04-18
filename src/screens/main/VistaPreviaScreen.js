@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -18,6 +18,38 @@ import { useNavigation } from '@react-navigation/native'; // 1. Importamos la na
 
 export default function PostPreviewScreen() {
   const navigation = useNavigation(); // 2. Inicializamos navigation
+
+  useEffect(() => {
+    const parent = navigation.getParent();
+          
+        if (parent) {
+            // Oculta el tab bar al entrar a la pantalla
+            parent.setOptions({
+                tabBarStyle: { display: 'none' },
+            });
+        }
+
+        return () => {
+            if (parent) {
+                // Restaura los estilos originales del tab bar al salir de la pantalla
+                parent.setOptions({
+                    tabBarStyle: {
+                        display: 'flex',
+                        backgroundColor: '#FFFFFF',
+                        borderTopWidth: 0,
+                        elevation: 10,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: -3 },
+                        shadowOpacity: 0.08,
+                        shadowRadius: 10,
+                        height: 65,
+                        paddingBottom: 10,
+                        paddingTop: 8,
+                    },
+                });
+            }
+        };
+    }, [navigation]);
 
   const [scheduleModalVisible, setScheduleModalVisible] = useState(false);
   const [aiModalVisible, setAiModalVisible] = useState(false);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -31,6 +31,40 @@ const IDEA_DATA = {
 export default function DetalleIdeaScreen({ navigation }) {
     const [selectedTags, setSelectedTags] = useState(['reel']);
 
+    // --- EFECTO PARA OCULTAR EL TAB BAR ---
+    useEffect(() => {
+        const parent = navigation.getParent();
+        
+        if (parent) {
+            // Oculta el tab bar al entrar a la pantalla
+            parent.setOptions({
+                tabBarStyle: { display: 'none' },
+            });
+        }
+
+        return () => {
+            if (parent) {
+                // Restaura los estilos originales del tab bar al salir de la pantalla
+                parent.setOptions({
+                    tabBarStyle: {
+                        display: 'flex',
+                        backgroundColor: '#FFFFFF',
+                        borderTopWidth: 0,
+                        elevation: 10,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: -3 },
+                        shadowOpacity: 0.08,
+                        shadowRadius: 10,
+                        height: 65,
+                        paddingBottom: 10,
+                        paddingTop: 8,
+                    },
+                });
+            }
+        };
+    }, [navigation]);
+    // ----------------------------------------
+
     const toggleTag = (tagId) => {
         if (selectedTags.includes(tagId)) {
             setSelectedTags(selectedTags.filter(id => id !== tagId));
@@ -52,7 +86,7 @@ export default function DetalleIdeaScreen({ navigation }) {
             <View style={styles.header}>
                 <TouchableOpacity
                     style={styles.backButton}
-                    onPress={() => navigation.goBack()}
+                    onPress={() => navigation.navigate('HomeMain')}
                 >
                     <Text style={styles.backIcon}>←</Text>
                 </TouchableOpacity>
