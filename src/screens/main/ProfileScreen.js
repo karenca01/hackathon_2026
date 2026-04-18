@@ -59,8 +59,8 @@ export default function ProfileScreen({ navigation }) {
               <Text style={styles.avatarText}></Text>
             </View>
             <View style={styles.profileTextContainer}>
-              <Text style={styles.businessName}>{businessData?.negocio || userData?.nombre || 'Usuario'}</Text>
-              <Text style={styles.location}>{businessData?.ubicacion || 'Ubicación'}</Text>
+              <Text style={styles.businessName}>{userData?.negocio || userData?.nombre || 'Usuario'}</Text>
+              <Text style={styles.location}>{businessData?.negocio || 'Negocio'} - {businessData?.ubicacion || 'Ubicación'}</Text>
               <View style={styles.planBadge}>
                 <Text style={styles.planText}>Plan Gratuito</Text>
               </View>
