@@ -14,7 +14,7 @@ if(!API_KEY) {
   process.exit(1);
 }
 
-const genAI = new GoogleGenerativeAI(API_KEY);
+const genAI = new GoogleGenerativeAI(API_KEY, {apiVersion:'v1'});
 const model = genAI.getGenerativeModel({ model:'gemini-1.0-pro' });
 
 async function quickGenerate(question){
